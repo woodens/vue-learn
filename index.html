@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>vue学习</title>
+	<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<script src="./node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="./node_modules/vue/dist/vue.min.js"></script>
+</head>
+<body>
+<div class="panel panel-default">
+	<div class="panel-body">
+		<test-component :route="route" @incc="inccs"></test-component>
+	</div>
+	<div id="counter-event-example">
+		<p>{{ total }}</p>
+		<button-counter v-on:increment="incrementTotal"></button-counter>
+	</div>
+</div>
+<template id="testComponent">
+	<div>
+		<ul>
+			<li v-for="item in route.items" v-text="item"></li>
+		</ul>
+		<button  @click="incc">test</button>
+	</div>
+</template>
+<template id="btn">
+	<button @click="increment">{{ counter }}</button>
+</template>
+<script>
+	Vue.config.devtools = true;
+	Vue.component('testComponent',{
+		template:'#testComponent',
+		props:['route'],
+		methods:{
+			incc:function(){
+				this.route.items.push(3);
+			},
+			increment: function () {
+				this.$emit('increment')
+			}
+		}
+	});
+	var testVm = new Vue({
+		el:'.panel-body',
+		data:{
+			route:{
+				items:[]
+			}
+		}
+	});
+
+	//btn test
+	Vue.component('button-counter', {
+		template: '#btn',
+		data: function () {
+			return {
+				counter: 0
+			}
+		},
+		methods: {
+			increment: function () {
+				this.counter += 1
+				this.$emit('increment')
+			}
+		},
+	})
+	new Vue({
+		el: '#counter-event-example',
+		data: {
+			total: 0
+		},
+		methods: {
+			incrementTotal: function () {
+				this.total += 1
+			}
+		}
+	})
+</script>
+</body>
+</html>
